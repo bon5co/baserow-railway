@@ -8,5 +8,18 @@ COPY railway-entrypoint.sh /railway-entrypoint.sh
 COPY seed_admin.py /baserow/railway_seed_admin.py
 RUN chmod +x /railway-entrypoint.sh && chmod 0644 /baserow/railway_seed_admin.py
 
+# Baked, non-deployer-facing settings. These are literals, and templateGenerate
+# drops a literal default (the variable then publishes as required-and-blank),
+# so they belong in the image rather than in the template's variable list.
+ENV BASEROW_ADMIN_NAME=Admin \
+    BASEROW_ENABLE_SECURE_PROXY_SSL_HEADER=yes \
+    BASEROW_AMOUNT_OF_WORKERS=1 \
+    BASEROW_AMOUNT_OF_GUNICORN_WORKERS=2 \
+    BASEROW_TRIGGER_SYNC_TEMPLATES_AFTER_MIGRATION=false \
+    BASEROW_BACKEND_LOG_LEVEL=WARNING \
+    BASEROW_BACKEND_DEBUG=false \
+    NODE_OPTIONS=--max-old-space-size=512 \
+    DISABLE_VOLUME_CHECK=yes
+
 ENTRYPOINT ["/railway-entrypoint.sh"]
 CMD []
