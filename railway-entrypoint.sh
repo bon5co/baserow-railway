@@ -11,7 +11,11 @@ set -euo pipefail
 
 # Caddy is the only listener that matters on Railway; bind it to the port
 # Railway injected. This runs after the injection, so it always wins.
-export BASEROW_CADDY_ADDRESSES=":${PORT}"
+# Caddy turns on automatic HTTPS for any address that is not port 80 or does not
+# carry an explicit scheme. Railway terminates TLS at the edge and speaks plain
+# HTTP to the container, so a bare ":8080" makes every request fail with
+# "Client sent an HTTP request to an HTTPS server". Force the http:// scheme.
+export BASEROW_CADDY_ADDRESSES="http://:${PORT}"
 
 # Railway terminates TLS at the edge and forwards plain HTTP, so Django must be
 # told to trust X-Forwarded-Proto or every absolute URL it builds (password
