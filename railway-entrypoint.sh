@@ -17,6 +17,17 @@ set -euo pipefail
 # "Client sent an HTTP request to an HTTPS server". Force the http:// scheme.
 export BASEROW_CADDY_ADDRESSES="http://:${PORT}"
 
+# Railway injects PORT into every service, and Baserow's Nuxt/Nitro web frontend
+# honours it. Upstream's Caddyfile proxies the frontend at a FIXED
+# localhost:3000, so leaving PORT set makes the frontend bind Railway's port
+# instead: it collides with Caddy, supervisor restarts it until
+# "webfrontend entered FATAL state, too many start retries too quickly", and
+# Caddy's upstream is dead the whole time. Caddy is the only process that needs
+# the injected port, and it already has it, so take PORT away from the rest.
+export NITRO_PORT=3000
+export NITRO_HOST=0.0.0.0
+unset PORT
+
 # Railway terminates TLS at the edge and forwards plain HTTP, so Django must be
 # told to trust X-Forwarded-Proto or every absolute URL it builds (password
 # reset links, public grid/form share links, file URLs) comes out as http://.
