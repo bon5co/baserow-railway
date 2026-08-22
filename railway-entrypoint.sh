@@ -8,6 +8,7 @@
 set -euo pipefail
 
 : "${PORT:=8080}"
+PUBLIC_PORT="$PORT"
 
 # Caddy is the only listener that matters on Railway; bind it to the port
 # Railway injected. This runs after the injection, so it always wins.
@@ -40,11 +41,11 @@ if [ -z "${BASEROW_ADMIN_EMAIL:-}" ] || [ -z "${BASEROW_ADMIN_PASSWORD:-}" ]; th
   exit 1
 fi
 
-echo "[railway] applying database migrations before opening ${PORT}"
+echo "[railway] applying database migrations before opening ${PUBLIC_PORT}"
 /baserow.sh backend-cmd manage migrate
 
 echo "[railway] seeding administrator and disabling public sign-up"
 /baserow.sh backend-cmd manage shell < /baserow/railway_seed_admin.py
 
-echo "[railway] starting Baserow; caddy on :${PORT}"
+echo "[railway] starting Baserow; caddy on :${PUBLIC_PORT}"
 exec /baserow.sh start
