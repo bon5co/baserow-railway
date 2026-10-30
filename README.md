@@ -1,5 +1,9 @@
 # baserow-railway
 
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/baserow-or-just-updated-airtable-alterna?referralCode=Z1xivh&utm_medium=integration&utm_source=template&utm_campaign=generic)
+
+**Deploy on Railway:** [Baserow template](https://railway.com/deploy/baserow-or-just-updated-airtable-alterna?referralCode=Z1xivh&utm_medium=integration&utm_source=template&utm_campaign=generic)
+
 Wrapper over [Baserow](https://baserow.io)'s all-in-one image for Railway, pinned by digest to
 2.3.3.
 
